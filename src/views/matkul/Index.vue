@@ -1,26 +1,22 @@
 <template>
-  <div class="home">
-    <!--<img alt="Vue logo" src="../assets/logo.png"> -->
-    <Slider />
+    <div class="home">
     <hr class="my-3">
-      <router-link class="btn btn-primary" to="/creatematakuliah">Add Matakuliah</router-link>
-    <table class="table table-striped">
+    <router-link class="btn btn-primary" to="/Creatematkul">Tambah Matakuliah</router-link>
+    <table class="table">
   <thead>
     <tr>
-      <th scope="col">ID</th>
-      <th scope="col">Nama Matakuliah</th>
+      <th scope="col">Nama Mata Kuliah</th>
       <th scope="col">SKS</th>
       <th scope="col">Aksi</th>
     </tr>
   </thead>
   <tbody>
-    <tr v-for="(data, index) in matkul" :key="index">
-      <td>{{ data.id }}</td>
-      <td>{{ data.nama_matakuliah }}</td>
-      <td>{{ data.sks }}</td>
-      <td>
-        <router-link class="btn btn-success" :to="{name:'Editmatakuliah', params:{id:data.id}}">Edit</router-link>
-        <button @click.prevent="matakuliahDelete(data.id)" class="btn btn-danger">Delete</button>
+    <tr v-for="(matkul, index) in Matkul" :key="index">
+      <td>{{ matkul.nama_matakuliah }}</td>
+      <td>{{ matkul.sks }}</td>
+      <td> 
+        <button class="btn btn-warning" :to="{name: 'Editmatkul', params:{id:matkul.id}}">Edit</button>
+        <button @click.prevent="matkulDelete(matkul.id)" class="btn btn-danger"> Delete </button>
       </td>
     </tr>
   </tbody>
@@ -30,17 +26,16 @@
 
 <script>
 import axios from 'axios'
-// @ is an alias to /src
-// import Slider from "@/components/Slider.vue";
-import { ref, onMounted } from 'vue';
-
+import { onMounted, ref } from 'vue'
 export default {
-  
-  setup(){
+  name: 'Home',
+  components: {
+    
+},
+setup(){
     let matkul = ref([])
-
     onMounted(() => {
-      axios.get('http://127.0.0.1:8000/api/matkul')
+      axios.get('localhost:8000/api/matkul/')
       .then(response => {
         matkul.value = response.data.data
       })
@@ -48,21 +43,20 @@ export default {
         console.log(error)
       })
     })
-
-    function matakuliahDelete(id){
-      axios.delete(`http://127.0.0.1:8000/api/matkul/${id}`)
-      .then(()=>{
-        let z = this.matkul.map(matkul => matkul.id).indexOf(id);
-        this.matkul.splice(z, 1)
-      }).catch(error => {
+    function matkulDelete(id){
+      axios.delete(`localhost:8000/api/matkul/${id}`)
+      .then(() =>{
+        let x = this.matkul.map(matkul => matkul.id).indexOf(id);
+        this.matkul.splice(x, 1)
+      }).catch(error =>{
         console.log(error)
       })
     }
-
-      return {
+    return  {
       matkul,
-      matakuliahDelete
+      matkulDelete
     }
   }
+    
 };
 </script>

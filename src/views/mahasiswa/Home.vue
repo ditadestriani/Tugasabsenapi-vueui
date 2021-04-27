@@ -1,13 +1,10 @@
 <template>
-  <div class="home">
-    <!-- <img alt="Vue logo" src="../assets/logo.png"> -->
-    <Slider />
+    <div class="home">
     <hr class="my-3">
-    <router-link class="btn btn-primary" to="/createmahasiswa">Add Mahasiswa</router-link>
-    <table class="table table-striped">
+    <router-link class="btn btn-primary" to="/Createmhs">Tambah Mahasiswa</router-link>
+    <table class="table">
   <thead>
     <tr>
-      <th scope="col">ID</th>
       <th scope="col">Nama Mahasiswa</th>
       <th scope="col">Alamat</th>
       <th scope="col">Nomor Telepon</th>
@@ -15,16 +12,15 @@
       <th scope="col">Aksi</th>
     </tr>
   </thead>
-   <tbody>
-    <tr v-for="(data, index) in mahasiswa" :key="index">
-      <td>{{ data.id }}</td>
-      <td>{{ data.nama_mahasiswa }}</td>
-      <td>{{ data.alamat }}</td>
-      <td>{{ data.no_tlp }}</td>
-      <td>{{ data.email }}</td>
-      <td>
-        <router-link class="btn btn-success" :to="{name:'Editmahasiswa', params:{id:data.id}}">Edit</router-link>
-        <button @click.prevent="mahasiswaDelete(data.id)" class="btn btn-danger">Delete</button>
+  <tbody>
+    <tr v-for="(mhs, index) in Mahasiswa" :key="index">
+      <td>{{ mhs.nama_mahasiswa }}</td>
+      <td>{{ mhs.alamat }}</td>
+      <td>{{ mhs.no_tlp }}</td>
+      <td>{{ mhs.email }} </td>
+      <td> 
+        <router-link class="btn btn-warning" :to="{name: 'Editmhs', params:{id:mhs.id}}">Edit</router-link>
+        <button @click.prevent="MahasiswaDelete(mhs.id)" class="btn btn-danger"> Delete </button>
       </td>
     </tr>
   </tbody>
@@ -34,43 +30,37 @@
 
 <script>
 import axios from 'axios'
-// @ is an alias to /src
-import Slider from '@/components/Slider.vue'
-import { ref, onMounted } from 'vue';
-
+import { onMounted, ref } from 'vue'
 export default {
   name: 'Home',
   components: {
-    Slider
-  },
-   setup(){
-    let mahasiswa = ref([])
-
+    
+},
+setup(){
+    let Mahasiswa = ref([])
     onMounted(() => {
-      axios.get('http://127.0.0.1:8000/api/mahasiswa')
+      axios.get('localhost:8000/api/Mahasiswa/')
       .then(response => {
-        mahasiswa.value = response.data.data
+        Mahasiswa.value = response.data.data
       })
       .catch(error => {
         console.log(error)
       })
     })
-
-    function mahasiswaDelete(id){
-      axios.delete(`http://127.0.0.1:8000/api/mahasiswa/${id}`)
-      .then(()=>{
-        let z = this.mahasiswa.map(mahasiswa => mahasiswa.id).indexOf(id);
-        this.mahasiswa.splice(z, 1)
-      }).catch(error => {
+    function MahasiswaDelete(id){
+      axios.delete(`localhost:8000/api/Mahasiswa/${id}`)
+      .then(() =>{
+        let x = this.Mahasiswa.map(Mahasiswa => Mahasiswa.id).indexOf(id);
+        this.Mahasiswa.splice(x, 1)
+      }).catch(error =>{
         console.log(error)
       })
     }
-
-      return {
-      mahasiswa,
-      mahasiswaDelete
+    return  {
+      Mahasiswa,
+      MahasiswaDelete
     }
   }
-}; 
+    
+};
 </script>
-
